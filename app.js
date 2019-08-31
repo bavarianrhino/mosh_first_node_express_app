@@ -89,26 +89,75 @@
 
 
 
-const http = require('http')
+// const http = require('http')
 
 // const server = http.createServer();
 // server.on('connection', (socket) => {
 //     console.log("New connection...")
 // })
-var courseArr = [1, 2, 3, 4];
-const server = http.createServer((req, res) => {
-    if(req.url === '/') {
-        res.write("Hello World!");
-        res.end();
-    }
-    if (req.url === '/api/courses') {
-        // res.write(JSON.stringify([1, 2, 3, 4]));
-        res.write(JSON.stringify(courseArr));
-		res.end();
+// var courseArr = [1, 2, 3, 4];
+// const server = http.createServer((req, res) => {
+//     if(req.url === '/') {
+//         res.write("Hello World!");
+//         res.end();
+//     }
+//     if (req.url === '/api/courses') {
+//         // res.write(JSON.stringify([1, 2, 3, 4]));
+//         res.write(JSON.stringify(courseArr));
+// 		res.end();
+// 	}
+// });
+
+// server.listen(3000);
+
+// console.log('Listening on port 3000...');
+
+
+
+
+// REST Representational State Transfer - Use CRUD operations
+
+const express = require('express')
+const app = express();
+
+var courseArr = [
+    { id: 1, name: 'course1'},
+    { id: 2, name: 'course2'},
+    { id: 3, name: 'course3'},
+    { id: 4, name: 'course4'}
+];
+
+// app.get()
+// app.post()
+// app.put()
+// app.delete()
+app.get('/', (req, res) => {
+    res.send("Hello World!!!")
+});
+
+app.get('/api/courses', (req, res) => {
+	res.send(courseArr);
+});
+
+app.get('/api/courses/:id', (req, res) => {
+	// res.send(courseArr);
+	const course = courseArr.find((c) => c.id === parseInt(req.params.id));
+	if (!course) {
+		res.status(404).send('The course with given ID was not found');
+	} else {
+		res.send(course);
 	}
 });
 
-server.listen(3000);
+// app.get('/api/posts/:year/:month', (req, res) => { //2018/1
+// 	res.send(req.params);
+// });
 
-console.log('Listening on port 3000...');
+app.get('/api/posts/:year/:month', (req, res) => { //?sortBy=name
+	res.send(req.query);
+});
 
+// PORT
+// Terminal command - export PORT=5000
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log(`Listening on port ${port}....`))
